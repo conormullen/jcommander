@@ -106,6 +106,7 @@ public class ParameterDescription {
     try {
       m_default = m_field.get(m_object);
     } catch (Exception e) {
+    	
     }
 
     //

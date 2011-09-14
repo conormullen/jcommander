@@ -31,12 +31,52 @@ public class DefaultValidationTest {
 		
 			// Make sure the exception is thrown
 			Assert.assertTrue(true);
+			System.out.println("Invalid default parameter");
+		}
+		
+	}
+	
+	
+	@Test
+	public void testDefaultIsValidatedSuccess(){
+		DefaultWithValidator dwv = new DefaultWithValidator();
+		JCommander jCommander = new JCommander(dwv);
+		
+		try{
+			jCommander.parse("test1","test2");
+			
+			// Should not reach this point.
+			Assert.assertTrue(true);
+		}catch(ParameterException pe){
+		
+			// Make sure the exception is thrown
+			Assert.assertTrue(false);
+		}
+		
+	}
+	
+	@Test
+	public void testDefaultIsValidatedWithFlag(){
+		DefaultWithValidator dwv = new DefaultWithValidator();
+		JCommander jCommander = new JCommander(dwv);
+		
+		try{
+			jCommander.parse("test1","test2","-f","flagOption");
+			
+			
+			// Should not reach this point.
+			Assert.assertTrue(true);
+		}catch(ParameterException pe){
+		
+			// Make sure the exception is thrown
+			Assert.assertTrue(false);
 		}
 		
 	}
 	
 	public static void main(String[] args) {
 	    new DefaultValidationTest().testDefaultIsValidated();
-	  }
+	    new DefaultValidationTest().testDefaultIsValidatedSuccess();
+	}
 
 }

@@ -15,19 +15,12 @@ import com.beust.jcommander.ParameterException;
  */
 public class DefaultWithValidator {
 	
-	@Parameter(description="My Value", validateWith=DefaulValidation.class)
+	@Parameter(description="My Value", validateWith=DefaultValidator.class)
 	public List<String> defaultString;
-
-}
-
-class DefaulValidation implements IParameterValidator {
-
-	@Override
-	public void validate(String name, String value) throws ParameterException {
-		if(!value.equals("default")){
-			throw new ParameterException("Value: " + value + " Does not meet default");
-		}
-		
-	}
 	
+	@Parameter(names={"-f"}, description="My Flag")
+	public String flag;
+
 }
+
+
