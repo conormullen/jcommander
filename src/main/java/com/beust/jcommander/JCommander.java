@@ -23,6 +23,7 @@ import com.beust.jcommander.converters.StringConverter;
 import com.beust.jcommander.internal.DefaultConverterFactory;
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
+import com.beust.jcommander.validators.NoValidator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -281,6 +282,7 @@ public class JCommander {
     }
 
     if (m_mainParameterDescription != null) {
+    	
       if (m_mainParameterDescription.getParameter().required() &&
           !m_mainParameterDescription.isAssigned()) {
         throw new ParameterException("Main parameters are required (\""
@@ -468,7 +470,11 @@ public class JCommander {
             m_mainParameterField = f;
             m_mainParameterObject = object;
             m_mainParameterAnnotation = p;
+          
+            
             m_mainParameterDescription = new ParameterDescription(object, p, f, m_bundle, this);
+            
+
           } else {
             for (String name : p.names()) {
               if (m_descriptions.containsKey(name)) {
@@ -590,6 +596,19 @@ public class JCommander {
                 convertedValue = convertValue(m_mainParameterField, (Class) cls, value);
               }
             }
+            
+            Class<? extends IParameterValidator> validator = m_mainParameterAnnotation.validateWith();
+            if (validator != NoValidator.class) {
+              try {
+                p("Validating parameter:" + "default" + " value:" + value + " validator:" + validator);
+                validator.newInstance().validate("Default", value);
+              } catch (InstantiationException e) {
+                throw new ParameterException("Can't instantiate validator:" + e);
+              } catch (IllegalAccessException e) {
+                throw new ParameterException("Can't instantiate validator:" + e);
+              }
+            }
+            
 
             m_mainParameterDescription.setAssigned(true);
             mp.add(convertedValue);
